@@ -23,7 +23,7 @@ namespace DW
 		TextureCache& operator=(const TextureCache&) = delete;
 
 	private:
-		std::map<std::string, std::shared_ptr<Texture>>	cache_;
+		std::unordered_map<std::string, std::shared_ptr<Texture>>	cache_;
 	};
 }
 

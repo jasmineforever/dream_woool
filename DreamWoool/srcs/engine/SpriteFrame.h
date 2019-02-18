@@ -21,6 +21,7 @@ namespace DW
 		std::weak_ptr<Texture>	texture_;
 		SimpleMath::Size		size_;
 		SimpleMath::Vector2		origin_;
+		SimpleMath::Vector2		offset_;
 		bool					rotated_;
 	};
 }

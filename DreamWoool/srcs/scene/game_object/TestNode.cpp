@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Sprite.h"
 #include "TestNode.h"
+#include "SpriteFrameCache.h"
 namespace DW
 {
 	TestNode::TestNode():
@@ -47,6 +48,7 @@ namespace DW
 		sprite3_ = Sprite::Create("resources/texture2.jpg");
 		sprite2_->AddChild(sprite3_);
 
+		SpriteFrameCache::GetInstance().ParseSpriteSheetFile("resources/mono_test.txt");
 		return true;
 	}
 	void TestNode::Update(float dt)

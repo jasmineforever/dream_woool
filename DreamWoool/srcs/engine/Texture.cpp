@@ -5,8 +5,6 @@ namespace DW
 	Texture::Texture()
 	{
 	}
-
-
 	Texture::~Texture()
 	{
 	}

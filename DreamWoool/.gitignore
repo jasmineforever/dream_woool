@@ -1,4 +1,5 @@
 /Debug
+/x64
 /resources/*
 *.aps
 *.filters
@@ -7,3 +8,4 @@
 *_vs
 RCa*
 !resources/.gitkeep
+!resources/.dream_woool.ico
