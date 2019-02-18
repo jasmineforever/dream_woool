@@ -1,0 +1,9 @@
+/Debug
+/resources/*
+*.aps
+*.filters
+*.user
+*_ps
+*_vs
+RCa*
+!resources/.gitkeep
