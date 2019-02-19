@@ -82,22 +82,47 @@ namespace DW
 		}
 		auto src_rect = sprite_frame_->GetSourceRect();
 		
-		auto texture_size = Size(sprite_frame_->GetTexture()->Width(), sprite_frame_->GetTexture()->Height());
-		vertices_[0].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
-			static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
-		vertices_[1].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width)  / static_cast<float>(texture_size.width),
-			static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
-		vertices_[2].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
-			static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
-		vertices_[3].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
-			static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
-
+		if (sprite_frame_->Rotated())
+		{
+			auto texture_size = Size(sprite_frame_->GetTexture()->Width(), sprite_frame_->GetTexture()->Height());
+			vertices_[2].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+			vertices_[0].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+			vertices_[3].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
+			vertices_[1].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
+		}
+		else
+		{
+			auto texture_size = Size(sprite_frame_->GetTexture()->Width(), sprite_frame_->GetTexture()->Height());
+			vertices_[0].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+			vertices_[1].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+			vertices_[2].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
+			vertices_[3].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
+				static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
+		}
+		
 		//auto& origin_size = sprite_frame_->GetOriginSize();
 		auto offset = sprite_frame_->GetOffset();
-		vertices_[0].position = { offset.x, offset.y, 0.0 };
-		vertices_[1].position = { offset.x + src_rect.width, offset.y, 0.0 };
-		vertices_[2].position = { offset.x, offset.y + src_rect.height, 0.0 };
-		vertices_[3].position = { offset.x + src_rect.width, offset.y + src_rect.height, 0.0 };
+		if (sprite_frame_->Rotated())
+		{
+			vertices_[0].position = { offset.x, offset.y, 0.0 };
+			vertices_[1].position = { offset.x + src_rect.height, offset.y, 0.0 };
+			vertices_[2].position = { offset.x, offset.y + src_rect.width, 0.0 };
+			vertices_[3].position = { offset.x + src_rect.height, offset.y + src_rect.width, 0.0 };
+		}
+		else
+		{
+			vertices_[0].position = { offset.x, offset.y, 0.0 };
+			vertices_[1].position = { offset.x + src_rect.width, offset.y, 0.0 };
+			vertices_[2].position = { offset.x, offset.y + src_rect.height, 0.0 };
+			vertices_[3].position = { offset.x + src_rect.width, offset.y + src_rect.height, 0.0 };
+		}
 	}
 	void Sprite::Draw()
 	{

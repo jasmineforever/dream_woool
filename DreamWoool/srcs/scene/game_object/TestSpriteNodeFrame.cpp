@@ -27,7 +27,7 @@ namespace DW
 	bool TestSpriteNodeFrame::Init()
 	{
 		auto& cache = SpriteFrameCache::GetInstance();
-		cache.LoadFromFile("resources/mono_test1.txt", "resources/mono_test1.png");
+		cache.LoadFromFile("resources/body_22.txt", "resources/body_22.png");
 
 		char key_str[128];
 		for (int i = 1; i <= 4; i++)

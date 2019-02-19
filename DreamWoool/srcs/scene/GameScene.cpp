@@ -32,6 +32,7 @@ namespace DW
 		AddChild(node);
 
 		auto sp = TestSpriteNodeFrame::Create();
+		sp->SetPosition(545, 800 - 545);
 		AddChild(sp);
 		return true;
 	}

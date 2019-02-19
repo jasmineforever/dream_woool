@@ -40,10 +40,35 @@ namespace DW
 						continue;
 					}
 					
+					SimpleMath::Vector2 offset;
+					if (frame_data.rotated)
+					{
+						//注释掉的这一行对应sprite frame 的anchor point 在左上角
+						/*offset = SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.height),
+							-frame_data.pivot_y * static_cast<float>(frame_data.width));*/
+						//default anchor point 0.5 0.5 
+						offset = SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.height)
+							+ (static_cast<float>(frame_data.origin_width) / 2.0),
+							-frame_data.pivot_y * static_cast<float>(frame_data.width)
+							+ (static_cast<float>(frame_data.origin_height)/ 2.0));
+						
+					}
+					else
+					{
+						//注释掉的这一行对应sprite frame 的anchor point 在左上角
+						//offset = SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.width), 
+						//	-frame_data.pivot_y * static_cast<float>(frame_data.height));
+						//default anchor point 0.5 0.5 
+						offset = SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.width)
+							+ (static_cast<float>(frame_data.origin_width) / 2.0),
+							-frame_data.pivot_y * static_cast<float>(frame_data.height)
+							+ (static_cast<float>(frame_data.origin_height) / 2.0));
+						
+					}
 					auto sp = SpriteFrame::Create(texture,
 						SimpleMath::Rectangle(frame_data.x, frame_data.y, frame_data.width, frame_data.height),
 						SimpleMath::Size(frame_data.origin_width, frame_data.origin_height),
-						SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.width), -frame_data.pivot_y * static_cast<float>(frame_data.height)),
+						offset,
 						frame_data.rotated);
 
 					cache_.insert(std::pair<std::string, std::shared_ptr<SpriteFrame>>(frame_data.key, sp));
