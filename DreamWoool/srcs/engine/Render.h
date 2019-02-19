@@ -46,6 +46,11 @@ namespace DW
 		IDWriteFactory*			dwrite_factory;
 		ID2D1Factory*			d2d_factory;
 	private:
+		struct TransformFinal
+		{
+			DirectX::XMMATRIX	transform_matrix;
+			float				alpha;
+		} transform_;
 		std::vector<Node*>				nodes_;
 		std::unique_ptr<CommonStates>	common_states_;
 		Microsoft::WRL::ComPtr<ID3D11VertexShader>	sprite_vertex_shader_;

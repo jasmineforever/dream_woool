@@ -53,7 +53,7 @@ namespace DW
 
 		D3D11_BUFFER_DESC bd = { 0 };
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = 4 * 4 * sizeof(float);
+		bd.ByteWidth = sizeof(TransformFinal);
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		d3d_device->CreateBuffer(&bd, NULL, c_buffer_.GetAddressOf());
 	}
@@ -105,8 +105,7 @@ namespace DW
 		for (auto node : nodes_)
 		{
 			auto type = node->GetNodeType();
-
-			d3d_context->OMSetBlendState(common_states_->AlphaBlend(), nullptr, 0xFFFFFFFF);
+			d3d_context->OMSetBlendState(common_states_->NonPremultiplied(), nullptr, 0xFFFFFFFF);
 			d3d_context->OMSetDepthStencilState(common_states_->DepthNone(), 0);
 
 			if (type == NodeType::SPRITE)
@@ -116,16 +115,18 @@ namespace DW
 				d3d_context->VSSetShader(sprite_vertex_shader_.Get(), nullptr, 0);
 				d3d_context->PSSetShader(sprite_pixel_shader_.Get(), nullptr, 0);
 				d3d_context->VSSetConstantBuffers(0, 1, c_buffer_.GetAddressOf());
-				auto transform = node->transform_matrix_with_parent_ * GetViewportTransform();
-				d3d_context->UpdateSubresource(c_buffer_.Get(), 0, 0, &transform, 0, 0);
+				transform_.transform_matrix = node->transform_matrix_with_parent_ * GetViewportTransform();
+				transform_.alpha = node->alpha_with_parent_;
+				d3d_context->UpdateSubresource(c_buffer_.Get(), 0, 0, &transform_, 0, 0);
 			}
 			else if (type == NodeType::DRAW_NODE)
 			{
 				d3d_context->VSSetShader(draw_node_vertex_shader_.Get(), nullptr, 0);
 				d3d_context->PSSetShader(draw_node_pixel_shader_.Get(), nullptr, 0);
 				d3d_context->VSSetConstantBuffers(0, 1, c_buffer_.GetAddressOf());
-				auto transform = node->transform_matrix_with_parent_ * GetViewportTransform();
-				d3d_context->UpdateSubresource(c_buffer_.Get(), 0, 0, &transform, 0, 0);
+				transform_.transform_matrix = node->transform_matrix_with_parent_ * GetViewportTransform();
+				transform_.alpha = node->alpha_with_parent_;
+				d3d_context->UpdateSubresource(c_buffer_.Get(), 0, 0, &transform_, 0, 0);
 			}
 			else if (type == NodeType::LABEL)
 			{

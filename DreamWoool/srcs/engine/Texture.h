@@ -7,10 +7,10 @@ namespace DW
 	public:
 		Texture();
 		~Texture();
-		int width();
-		int height();
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> view();
-		static std::shared_ptr<Texture> createWithShaderResourceView();
+		int Width();
+		int Height();
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> View();
+		static std::shared_ptr<Texture> CreateWithShaderResourceView();
 	private:
 		Texture(const Texture&) = delete;
 		Texture& operator=(const Texture&) = delete;

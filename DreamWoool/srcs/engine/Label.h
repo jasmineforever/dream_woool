@@ -14,7 +14,7 @@ namespace DW
 
 		void Draw();
 
-		static std::shared_ptr<Label> Create(const std::string& text = "");
+		static std::shared_ptr<Label> Create(const std::string& text = "", const std::string& ttf_font_file = "");
 	private:
 		static void InitFontAndRender();
 	private:

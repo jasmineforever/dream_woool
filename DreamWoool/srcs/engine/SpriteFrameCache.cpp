@@ -11,15 +11,48 @@ namespace DW
 		static SpriteFrameCache cache;
 		return cache;
 	}
+	std::shared_ptr<SpriteFrame> SpriteFrameCache::GetSpriteFrame(const std::string& key)
+	{
+		auto it = cache_.find(key);
 
+		if (it != cache_.end())
+		{
+			return it->second;
+		}
+		return nullptr;
+	}
 	void SpriteFrameCache::LoadFromFile(const std::string& sprite_sheet_file_name,
 		const std::string& image_file_name)
 	{
-		
-		//if(TextureCache::GetInstance().LoadFromFile(image_file_name))
+		auto texture = TextureCache::GetInstance().LoadFromFile(image_file_name, true);
+		if (texture)
+		{
+			std::vector<FrameData> frames_data;
+			if (ParseSpriteSheetFile(sprite_sheet_file_name, frames_data))
+			{
+				for (auto frame_data : frames_data)
+				{
+					auto it = cache_.find(frame_data.key);
+
+					if (it != cache_.end())
+					{
+						LOG_WARNING("%s alread in sprite cache.");
+						continue;
+					}
+					
+					auto sp = SpriteFrame::Create(texture,
+						SimpleMath::Rectangle(frame_data.x, frame_data.y, frame_data.width, frame_data.height),
+						SimpleMath::Size(frame_data.origin_width, frame_data.origin_height),
+						SimpleMath::Vector2(-frame_data.pivot_x * static_cast<float>(frame_data.width), -frame_data.pivot_y * static_cast<float>(frame_data.height)),
+						frame_data.rotated);
+
+					cache_.insert(std::pair<std::string, std::shared_ptr<SpriteFrame>>(frame_data.key, sp));
+				}
+			}
+		}
 	}
 
-	bool SpriteFrameCache::ParseSpriteSheetFile(const std::string& sprite_sheet_file_name)
+	bool SpriteFrameCache::ParseSpriteSheetFile(const std::string& sprite_sheet_file_name, std::vector<FrameData>& out)
 	{
 		std::ifstream inFile(sprite_sheet_file_name);
 		if (!inFile)
@@ -52,7 +85,7 @@ namespace DW
 				}
 				if (GetFrameData(elements, frame_data))
 				{
-
+					out.push_back(frame_data);
 				}
 			}
 

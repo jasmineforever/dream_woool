@@ -30,7 +30,10 @@ namespace DW
 		position_with_parent_and_anchor_(0., 0.),
 		scale_(1.0, 1.0),
 		rotation_(0.),
-		anchor_point_(0.,0.)
+		anchor_point_(0.,0.),
+		alpha_(1.0),
+		alpha_with_parent_(1.0),
+		alpha_dirty_(true)
 	{
 	}
 	void Node::SetLocalZOrder(int order)
@@ -182,6 +185,17 @@ namespace DW
 		parent_ = parent;
 	}
 	
+	void Node::SetOpacity(float alpha)
+	{
+		alpha_ = alpha;
+		alpha_dirty_ = true;
+	}
+
+	float Node::GetOpacity()
+	{
+		return alpha_;
+	}
+
 	void Node::AddChild(std::shared_ptr<Node> child, int local_z_order)
 	{
 		if (!child  || child.get() == this)
@@ -246,6 +260,22 @@ namespace DW
 	{
 		return transform_matrix_with_parent_;
 	}
+	
+	void Node::UpdateAlpha(bool is_dirty)
+	{
+		if (is_dirty)
+		{
+			if (auto p = parent_.lock())
+			{
+				alpha_with_parent_ = alpha_ * p->alpha_with_parent_;
+			}
+			else
+			{
+				alpha_with_parent_ = alpha_;
+			}
+		}
+	}
+
 	void Node::UpdateTransformMatrix(bool is_dirty)
 	{
 		if (transform_need_update_)
@@ -263,7 +293,7 @@ namespace DW
 		{
 			if (auto p = parent_.lock())
 			{
-				transform_matrix_with_parent_ = transform_matrix_ * p->GetTransformMatrixWithParent();
+				transform_matrix_with_parent_ = transform_matrix_ * p->transform_matrix_with_parent_;
 			}
 			else
 			{
@@ -338,31 +368,33 @@ namespace DW
 			Update(t);
 		}
 	}
-	void Node::VisitForDraw(bool is_parent_dirty)
+	void Node::VisitForDraw(bool is_parent_transform_dirty, bool is_parent_alpha_dirty)
 	{
 		if (visible_)
 		{
-			bool is_dirty = is_parent_dirty | transform_dirty_;
+			bool is_transform_dirty = is_parent_transform_dirty | transform_dirty_;
+			bool is_alpha_dirty = is_parent_alpha_dirty | alpha_dirty_;
 			if (children_.size() > 0)
 			{
-				UpdateTransformMatrix(is_dirty);
-				//Draw();
+				UpdateTransformMatrix(is_transform_dirty);
+				UpdateAlpha(is_alpha_dirty);
+		
 				Director::GetInstance().GetRender().PushNodeToRenderQueue(this);
 				SortChildren();
 
 				for (auto& c : children_)
 				{
-					c->VisitForDraw(is_dirty);
+					c->VisitForDraw(is_transform_dirty, is_alpha_dirty);
 				}
 			}
 			else
 			{
-
-				UpdateTransformMatrix(is_dirty);
-				//Draw();
+				UpdateTransformMatrix(is_transform_dirty);
+				UpdateAlpha(is_alpha_dirty);
 				Director::GetInstance().GetRender().PushNodeToRenderQueue(this);
 			}
 			transform_dirty_ = false;
+			alpha_dirty_ = false;
 		}
 	}
 	Node::~Node()

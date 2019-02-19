@@ -7,22 +7,34 @@ namespace DW
 	{
 	public:
 		SpriteFrame(std::shared_ptr<Texture> texture,
-					SimpleMath::Size size,
-					SimpleMath::Vector2 origin,
+					const SimpleMath::Rectangle& source_rect,
+					const SimpleMath::Size& origin_size,
+					const SimpleMath::Vector2& offset,
 					bool rotated);
+
 		~SpriteFrame();
+
 		static std::shared_ptr<SpriteFrame> Create(std::shared_ptr<Texture> texture,
-			SimpleMath::Size size,
-			SimpleMath::Vector2 origin,
+			const SimpleMath::Rectangle& source_rect,
+			const SimpleMath::Size& origin_size,
+			const SimpleMath::Vector2& offset,
 			bool rotated);
-		SimpleMath::Size GetSize();
+
+		const SimpleMath::Rectangle GetSourceRect() const;
+
+		const SimpleMath::Size GetOriginSize() const;
+
+		const SimpleMath::Vector2 GetOffset() const;
+
+		bool Rotated();
+
 		std::shared_ptr<Texture> GetTexture();
 	private:
-		std::weak_ptr<Texture>	texture_;
-		SimpleMath::Size		size_;
-		SimpleMath::Vector2		origin_;
-		SimpleMath::Vector2		offset_;
-		bool					rotated_;
+		std::shared_ptr<Texture>	texture_;
+		SimpleMath::Size			origin_size_;
+		SimpleMath::Vector2			offset_;
+		SimpleMath::Rectangle		src_rect_;
+		bool						rotated_;
 	};
 }
 

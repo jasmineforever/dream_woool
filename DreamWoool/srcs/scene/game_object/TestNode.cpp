@@ -25,6 +25,7 @@ namespace DW
 
 	bool TestNode::Init()
 	{
+		//SetOpacity(0.5);
 		sprite1_ = Sprite::Create("resources/texture.jpg");
 		sprite1_->SetScale(0.5);
 		AddChild(sprite1_);
@@ -36,7 +37,7 @@ namespace DW
 		d->SetPosition(sprite1_->GetContentSize().width / 2, sprite1_->GetContentSize().height / 2);
 		sprite1_->AddChild(d);
 
-		label1_ = Label::Create("Hello world");
+		label1_ = Label::Create("ÎÞÇéµÄÄã");
 		sprite1_->AddChild(label1_);
 		label1_->SetPosition(sprite1_->GetContentSize().width / 2, sprite1_->GetContentSize().height / 2);
 		label1_->SetAnchorPoint(0.5, 0.5);
@@ -47,8 +48,6 @@ namespace DW
 
 		sprite3_ = Sprite::Create("resources/texture2.jpg");
 		sprite2_->AddChild(sprite3_);
-
-		SpriteFrameCache::GetInstance().ParseSpriteSheetFile("resources/mono_test.txt");
 		return true;
 	}
 	void TestNode::Update(float dt)

@@ -3,7 +3,7 @@
 #include "Label.h"
 #include "DrawNode.h"
 #include "game_object/TestNode.h"
-
+#include "game_object/TestSpriteNodeFrame.h"
 namespace DW
 {
 	std::shared_ptr<GameScene> GameScene::Create()
@@ -30,6 +30,9 @@ namespace DW
 		auto node = TestNode::Create();
 		node->SetPosition(1280 / 2, 800 / 2);
 		AddChild(node);
+
+		auto sp = TestSpriteNodeFrame::Create();
+		AddChild(sp);
 		return true;
 	}
 	GameScene::~GameScene()

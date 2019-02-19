@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "TextureCache.h"
 #include "Director.h"
-
+#include "SimpleMath.h"
 namespace DW
 {
 	const uint16_t Sprite::indices_[6] = { 0, 1, 2, 2, 1, 3 };
@@ -17,16 +17,24 @@ namespace DW
 	}
 	std::shared_ptr<Sprite> Sprite::Create(const std::string& png_file_path)
 	{
-		return Sprite::Create(TextureCache::GetInstance().LoadFromFile(png_file_path));
+		return Sprite::Create(TextureCache::GetInstance().LoadFromFile(png_file_path, false));
 	}
-
+	std::shared_ptr<Sprite> Sprite::Create()
+	{
+		auto sprite = std::make_shared<Sprite>();
+		sprite->InitGraphics();
+		return sprite;
+	}
 	std::shared_ptr<Sprite> Sprite::Create(std::shared_ptr<Texture> texture)
 	{
 		if (texture)
 		{
 			auto sprite = std::make_shared<Sprite>();
 			sprite->InitGraphics();
-			auto sf = SpriteFrame::Create(texture, Size(texture->width(), texture->height()), Vector2(0., 0.), false);
+			auto sf = SpriteFrame::Create(texture, 
+				SimpleMath::Rectangle(0, 0, texture->Width(), texture->Height()),
+				SimpleMath::Size(texture->Width(), texture->Height()),
+				SimpleMath::Vector2(0, 0), false);
 			sprite->SetSpriteFrame(sf);
 			return sprite;
 		}
@@ -39,7 +47,7 @@ namespace DW
 			sprite_frame_.reset();
 		}
 		sprite_frame_ = sf;
-		SetContentSize(sprite_frame_->GetSize());
+		SetContentSize(sprite_frame_->GetOriginSize().width, sprite_frame_->GetOriginSize().height);
 		InitVertices();
 	}
 	void Sprite::InitGraphics()
@@ -72,15 +80,24 @@ namespace DW
 		{
 			vertices_[i].color = { 1.0, 1.0, 1.0, 1.0 };
 		}
-		vertices_[0].textureCoordinate = { 0.0, 0.0 };
-		vertices_[1].textureCoordinate = { 1.0, 0.0 };
-		vertices_[2].textureCoordinate = { 0.0, 1.0 };
-		vertices_[3].textureCoordinate = { 1.0, 1.0 };
+		auto src_rect = sprite_frame_->GetSourceRect();
+		
+		auto texture_size = Size(sprite_frame_->GetTexture()->Width(), sprite_frame_->GetTexture()->Height());
+		vertices_[0].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+			static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+		vertices_[1].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width)  / static_cast<float>(texture_size.width),
+			static_cast<float>(src_rect.y) / static_cast<float>(texture_size.height) };
+		vertices_[2].textureCoordinate = { static_cast<float>(src_rect.x) / static_cast<float>(texture_size.width),
+			static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
+		vertices_[3].textureCoordinate = { static_cast<float>(src_rect.x + src_rect.width) / static_cast<float>(texture_size.width),
+			static_cast<float>(src_rect.y + src_rect.height) / static_cast<float>(texture_size.height) };
 
-		vertices_[0].position = { 0.0, 0.0, 0.0 };
-		vertices_[1].position = { sprite_frame_->GetSize().width, 0.0, 0.0 };
-		vertices_[2].position = { 0.0, sprite_frame_->GetSize().height, 0.0 };
-		vertices_[3].position = { sprite_frame_->GetSize().width, sprite_frame_->GetSize().height, 0.0 };
+		//auto& origin_size = sprite_frame_->GetOriginSize();
+		auto offset = sprite_frame_->GetOffset();
+		vertices_[0].position = { offset.x, offset.y, 0.0 };
+		vertices_[1].position = { offset.x + src_rect.width, offset.y, 0.0 };
+		vertices_[2].position = { offset.x, offset.y + src_rect.height, 0.0 };
+		vertices_[3].position = { offset.x + src_rect.width, offset.y + src_rect.height, 0.0 };
 	}
 	void Sprite::Draw()
 	{
@@ -104,7 +121,7 @@ namespace DW
 		memcpy(ms.pData, indices_, sizeof(indices_));
 		render.d3d_context->Unmap(index_buffer_.Get(), NULL);
 	
-		render.d3d_context->PSSetShaderResources(0, 1, sprite_frame_->GetTexture()->view().GetAddressOf());
+		render.d3d_context->PSSetShaderResources(0, 1, sprite_frame_->GetTexture()->View().GetAddressOf());
 		// set the primitive topology
 		render.d3d_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		render.d3d_context->DrawIndexed(6, 0, 0);

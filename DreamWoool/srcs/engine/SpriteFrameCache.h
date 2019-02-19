@@ -15,7 +15,8 @@ namespace DW
 
 		~SpriteFrameCache();
 
-		bool ParseSpriteSheetFile(const std::string& sprite_sheet_file_name);
+		std::shared_ptr<SpriteFrame> GetSpriteFrame(const std::string& key);
+
 	private:
 		SpriteFrameCache() = default;
 		SpriteFrameCache(const SpriteFrameCache&) = delete;
@@ -47,7 +48,7 @@ namespace DW
 			pivot_x,
 			pivot_y
 		};
-		//bool ParseSpriteSheetFile(const std::string& sprite_sheet_file_name);
+		bool ParseSpriteSheetFile(const std::string& sprite_sheet_file_name, std::vector<FrameData>& out);
 
 		bool GetFrameData(const std::vector<std::string> in, FrameData& out);
 

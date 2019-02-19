@@ -2,7 +2,7 @@
 #include "ID3DApp.h"
 #include "graphics/TextRender.h"
 #include "Scene.h"
-#include "TestDraw.h"
+
 namespace DW
 {
 	class GameApp : public ID3DApp

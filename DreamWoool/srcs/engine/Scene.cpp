@@ -16,7 +16,7 @@ namespace DW
 	}
 	void Scene::Render()
 	{
-		VisitForDraw(transform_dirty_);
+		VisitForDraw(transform_dirty_, alpha_dirty_);
 	}
 	void Scene::UpdateScene(float t)
 	{

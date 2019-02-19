@@ -15,7 +15,9 @@ namespace DW
 
 		void Draw();
 
-		static std::shared_ptr<Sprite> Create(const std::string& png_file_path = "");
+		static std::shared_ptr<Sprite> Create();
+
+		static std::shared_ptr<Sprite> Create(const std::string& png_file_path);
 
 		static std::shared_ptr<Sprite> Create(std::shared_ptr<Texture> texture);
 

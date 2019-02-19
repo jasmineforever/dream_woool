@@ -81,6 +81,10 @@ namespace DW
 
 		void SetNodeType(NodeType type);
 
+		void SetOpacity(float alpha);
+
+		float GetOpacity();
+
 		virtual void Draw();
 
 		virtual void Update(float t);
@@ -93,7 +97,7 @@ namespace DW
 		void UnSchedule(int schedule_id);
 
 	protected:
-		void VisitForDraw(bool is_parent_dirty);
+		void VisitForDraw(bool is_parent_transform_dirty, bool is_parent_alpha_dirty);
 
 		void VisitForUpdate(float t);
 	private:
@@ -107,6 +111,8 @@ namespace DW
 
 		void UpdateTransformMatrix(bool is_dirty);
 
+		void UpdateAlpha(bool is_dirty);
+
 		const XMMATRIX GetTransformMatrixWithParent() const;
 
 		XMMATRIX GetScaleMatrix();
@@ -119,7 +125,9 @@ namespace DW
 	protected:
 		bool				transform_dirty_;
 		bool				transform_need_update_;
+		bool				alpha_dirty_;
 		XMMATRIX			transform_matrix_with_parent_;
+		float				alpha_with_parent_;
 	private:
 		NodeType			node_type_;
 		int					local_z_order_;
@@ -136,6 +144,7 @@ namespace DW
 		std::weak_ptr<Node>	parent_;
 		std::string			name_;
 		XMMATRIX			transform_matrix_;
+		float				alpha_;
 	};
 }
 

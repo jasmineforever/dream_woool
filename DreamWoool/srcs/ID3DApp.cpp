@@ -79,8 +79,10 @@ namespace DW
 	bool ID3DApp::InitEnv()
 	{
 		bool ret = false;
+		StringUtil::InitLocale();
 		Logger::getLogger().disableLogToStdout();
 		Logger::getLogger().setLogToDebug(true);
+		
 		do
 		{
 			if (!XMVerifyCPUSupport())
