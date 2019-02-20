@@ -15,7 +15,8 @@ namespace DW
 		d2d_factory_->AddRef();
 		render_target_->AddRef();
 		text_brush_->AddRef();
-		text_outline_brush_->AddRef();
+		if(text_outline_brush_)
+			text_outline_brush_->AddRef();
 	}
 
 	TextRender::~TextRender()
@@ -59,7 +60,8 @@ namespace DW
 		hr = d2d_factory_->CreateTransformedGeometry(pPathGeometry, &matrix, &pTransformedGeometry);
 
 		// 绘制文字描边部分
-		render_target_->DrawGeometry(pTransformedGeometry, text_outline_brush_, stroke_width_);
+		if(text_outline_brush_)
+			render_target_->DrawGeometry(pTransformedGeometry, text_outline_brush_, stroke_width_);
 		// 绘制文字填充部分
 		render_target_->FillGeometry(pTransformedGeometry, text_brush_);
 
@@ -106,7 +108,7 @@ namespace DW
 		D2D1::Matrix3x2F const matrix = D2D1::Matrix3x2F(
 			1.0f, 0.0f,
 			0.0f, 1.0f,
-			baselineOriginX, baselineOriginY
+			baselineOriginX, baselineOriginY + 2 //underline position
 		);
 
 		ID2D1TransformedGeometry* pTransformedGeometry = NULL;
@@ -120,10 +122,14 @@ namespace DW
 		}
 
 		// Draw the outline of the rectangle
-		render_target_->DrawGeometry(
-			pTransformedGeometry,
-			text_outline_brush_
-		);
+
+		if (text_outline_brush_)
+		{
+			render_target_->DrawGeometry(
+				pTransformedGeometry,
+				text_outline_brush_
+			);
+		}
 
 		// Fill in the rectangle
 		render_target_->FillGeometry(
@@ -187,11 +193,13 @@ namespace DW
 		}
 
 		// Draw the outline of the rectangle
-		render_target_->DrawGeometry(
-			pTransformedGeometry,
-			text_outline_brush_
-		);
-
+		if (text_outline_brush_)
+		{
+			render_target_->DrawGeometry(
+				pTransformedGeometry,
+				text_outline_brush_
+			);
+		}
 		// Fill in the rectangle
 		render_target_->FillGeometry(
 			pTransformedGeometry,

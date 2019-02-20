@@ -23,7 +23,7 @@
     <ProjectGuid>{A7902F61-AB13-4553-8A41-126C6E60FAED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DreamWoool</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -98,6 +98,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -152,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="srcs\engine\Color.h" />
     <ClInclude Include="srcs\engine\CommonStates.h" />
     <ClInclude Include="srcs\engine\DemandCreate.h" />
     <ClInclude Include="srcs\engine\Director.h" />
@@ -198,6 +202,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="srcs\engine\Color.cpp" />
     <ClCompile Include="srcs\engine\CommonStates.cpp" />
     <ClCompile Include="srcs\engine\Director.cpp" />
     <ClCompile Include="srcs\engine\DrawNode.cpp" />

@@ -26,8 +26,6 @@ namespace DW
 	}
 	bool GameScene::Init()
 	{
-		TTFInfo ttf;
-		TTFInfo::ParseTTFInfo("resources/fonts/ÌÚÏéÇßÔ²¼òÌå.ttf", ttf);
 		auto bg = Sprite::Create("resources/xinshou.jpg");
 		AddChild(bg);
 		auto node = TestNode::Create();

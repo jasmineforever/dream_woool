@@ -5,6 +5,7 @@ namespace DW
 	class TTFInfo
 	{
 	public:
+		friend class FontManager;
 		TTFInfo() = default;
 		~TTFInfo() = default;
 		enum PropertyIndex

@@ -50,7 +50,9 @@ namespace DW
 		sprite_->SetSpriteFrame(sps_[0]);
 		AddChild(sprite_);
 		
-		auto label = Label::Create("无情铁手");
+		auto label = Label::Create("香香的我", 20, DWColor::Yellow, "resources/fonts/lantinghei.ttf");
+		label->SetUnderline(true);
+		label->SetBorder(true);
 		AddChild(label);
 		return true;
 	}

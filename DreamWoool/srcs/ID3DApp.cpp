@@ -52,7 +52,7 @@ namespace DW
 	}
 	SimpleMath::Size ID3DApp::GetWindowSize()
 	{
-		return SimpleMath::Size(window_width_, window_height_);
+		return SimpleMath::Size(static_cast<float>(window_width_), static_cast<float>(window_height_));
 	}
 	bool ID3DApp::Init()
 	{
@@ -119,7 +119,7 @@ namespace DW
 			RECT rc = { 0, 0, static_cast<LONG>(window_width_), static_cast<LONG>(window_height_) };
 
 			AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-
+	
 			hwnd_ = CreateWindowEx(0, window_name_.c_str(), window_name_.c_str(), WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
 				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, h_instance_,
 				nullptr);
@@ -289,24 +289,24 @@ namespace DW
 			swap_chain_desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 			swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 			swap_chain_desc.BufferCount = 2;
+			
+			UINT m4x_msaa_quality;
+			d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM, 4, &m4x_msaa_quality);
+			if (m4x_msaa_quality <= 0)
 			{
-				UINT m4x_msaa_quality;
-				d3d_device_->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM, 4, &m4x_msaa_quality);
-				if (m4x_msaa_quality <= 0)
-				{
-					LOG_WARNING("CheckMultisampleQualityLevels < 0");
-				}
-				if (d3d_options_ & C_ENABLE_4XMSAA)
-				{
-					swap_chain_desc.SampleDesc.Count = 4;
-					swap_chain_desc.SampleDesc.Quality = m4x_msaa_quality - 1;
-				}
-				else
-				{
-					swap_chain_desc.SampleDesc.Count = 1;
-					swap_chain_desc.SampleDesc.Quality = 0;
-				}
+				LOG_WARNING("CheckMultisampleQualityLevels < 0");
 			}
+			if (d3d_options_ & C_ENABLE_4XMSAA)
+			{
+				swap_chain_desc.SampleDesc.Count = 4;
+				swap_chain_desc.SampleDesc.Quality = m4x_msaa_quality - 1;
+			}
+			else
+			{
+				swap_chain_desc.SampleDesc.Count = 1;
+				swap_chain_desc.SampleDesc.Quality = 0;
+			}
+			
 			swap_chain_desc.Scaling = DXGI_SCALING_STRETCH;
 			swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 			swap_chain_desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;

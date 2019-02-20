@@ -1,69 +1,38 @@
 #include <pch.h>
 #include "Label.h"
-#include "TextureCache.h"
 #include "Director.h"
+#include "FontManager.h"
 namespace DW
 {
 	Microsoft::WRL::ComPtr<IDWriteFontCollection>	Label::s_font_collection_;
-	bool Label::s_init_state = false;
 
-	Label::Label(const std::string& text)
+	Label::Label(const std::string& text,
+		int font_size,
+		const DWColor& color,
+		const std::string& font_family):
+		text_(StringUtil::CstrToWstr(text)),
+		font_color_(color),
+		border_color_(DWColor::Black),
+		font_size_(font_size),
+		border_(false),
+		bold_(false),
+		underline_(false),
+		italic_(false),
+		font_family_(StringUtil::CstrToWstr(font_family))
 	{
-		auto& render = Director::GetInstance().GetRender();
-		auto wtext = StringUtil::CstrToWstr(text);
-		HR(render.d2d_render_target->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::Yellow, alpha_with_parent_),
-			color_brush_.GetAddressOf()));
-
-		HR(render.d2d_render_target->CreateSolidColorBrush(
-			D2D1::ColorF(D2D1::ColorF::Black, alpha_with_parent_),
-			border_brush_.GetAddressOf()));
-
-		text_render_ = std::make_unique<TextRender>(render.d2d_factory,
-			render.d2d_render_target,
-			color_brush_.Get(),
-			border_brush_.Get());
-		Microsoft::WRL::ComPtr<IDWriteFontFamily> fontFamily;
-		wchar_t name_buf[128];
-
-		for (int i = 0; i < s_font_collection_->GetFontFamilyCount(); i++)
+		if (font_family_.empty())
 		{
-			fontFamily.Reset();
-			s_font_collection_->GetFontFamily(i, fontFamily.GetAddressOf());
-			Microsoft::WRL::ComPtr <IDWriteLocalizedStrings> name;
-			fontFamily->GetFamilyNames(name.GetAddressOf());
-			name->GetString(0, name_buf, 128);
+			font_family_ = L"Arial";
 		}
-		
-		HR(render.dwrite_factory->CreateTextFormat(L"Tensentype QinYuanJ-W1", 
-			s_font_collection_.Get(),
-			//DWRITE_FONT_WEIGHT_NORMAL,
-			DWRITE_FONT_WEIGHT_BOLD,
-			DWRITE_FONT_STYLE_NORMAL, 
-			DWRITE_FONT_STRETCH_NORMAL, 
-			30.0f, L"", 
-			text_format_.GetAddressOf()));
+		CreateFontBrush();
 
-		//HR(render.dwrite_factory->CreateTextFormat(L"ËÎÌו",
-		//	nullptr,
-		//	DWRITE_FONT_WEIGHT_NORMAL,
-		//	DWRITE_FONT_STYLE_NORMAL,
-		//	DWRITE_FONT_STRETCH_NORMAL,
-		//	30.0f, L"",
-		//	text_format_.GetAddressOf()));
-
-		HR(render.dwrite_factory->CreateTextLayout(
-			wtext.c_str(),                       // Text to be displayed
-			wtext.size(),                     // Length of the text
-			text_format_.Get(),                 // DirectWrite Text Format object
-			200,                         // Width of the Text Layout
-			40,                        // Height of the Text Layout
-			&text_layout_
-		));
-		//text_layout_->SetUnderline(TRUE, { 0, text.size() });
-		DWRITE_TEXT_METRICS info;
-		text_layout_->GetMetrics(&info);
-		SetContentSize(info.width, info.height);
+		if (border_)
+		{
+			CreateBorderBrush();
+		}
+		CreateTextRender();
+		CreateTextFormat();
+		CreateTextLayout();
 	}
 
 	Label::~Label()
@@ -71,41 +40,190 @@ namespace DW
 
 	}
 
-	std::shared_ptr<Label> Label::Create(const std::string& text, const std::string& ttf_font_file)
+	std::shared_ptr<Label> Label::Create(const std::string& text,
+		int font_size,
+		const DWColor& color,
+		const std::string& ttf_font_file)
 	{
-		if (!s_init_state)
+		if (s_font_collection_.Get())
 		{
-			InitFontAndRender();
+			Director::GetInstance().GetRender().dwrite_factory->GetSystemFontCollection(s_font_collection_.GetAddressOf());
 		}
-		return std::make_shared<Label>(text);
+		return std::make_shared<Label>(text, font_size, color, FontManager::GetInstance().GetFontFamilyName(ttf_font_file));
 	}
-	void Label::InitFontAndRender()
+	void Label::SetText(const std::string& text)
 	{
-		if (!s_init_state)
-		{
-			std::wstring fontFilename = L"resources/fonts/lantinghei.ttf";
-			if (AddFontResource(fontFilename.c_str()) == 0)
-			{
-				OutputDebugString(L"Error adding font resource!\n");
-			}
-			
-			if (FAILED(Director::GetInstance().GetRender().dwrite_factory->GetSystemFontCollection(s_font_collection_.GetAddressOf(), false)))
-			{
-				OutputDebugString(L"Failed to retrieve system font collection.\n");
-			}
-			Microsoft::WRL::ComPtr<IDWriteFontFamily> fontFamily;
-			wchar_t name_buf[128];
+		text_ = StringUtil::CstrToWstr(text);
+		CreateTextLayout();
+	}
 
-			for (int i = 0; i < s_font_collection_->GetFontFamilyCount(); i++)
-			{
-				fontFamily.Reset();
-				s_font_collection_->GetFontFamily(i, fontFamily.GetAddressOf());
-				Microsoft::WRL::ComPtr <IDWriteLocalizedStrings> name;
-				fontFamily->GetFamilyNames(name.GetAddressOf());
-				name->GetString(0, name_buf, 128);
-			}
-			s_init_state = true;
+	std::string Label::GetText(const std::string& text) const
+	{
+		return StringUtil::WstrToCstr(text_);
+	}
+
+	void Label::SetFontSize(int size)
+	{
+		if (font_size_ != size)
+		{
+			font_size_ = size;
+			CreateTextFormat();
+			CreateTextLayout();
 		}
+	}
+
+	int Label::GetFontSize()
+	{
+		return font_size_;
+	}
+
+	void Label::SetFontColor(const DWColor& color)
+	{
+		font_color_ = color;
+		font_brush_->SetColor(D2D1::ColorF(font_color_.GetByteColor(), alpha_with_parent_ * font_color_.GetFloatA()));
+		CreateTextRender();
+	}
+
+	const DWColor& Label::GetFontColor() const
+	{
+		return font_color_;
+	}
+
+	void Label::SetBold(bool bold)
+	{
+		if (bold != bold_)
+		{
+			bold_ = bold;
+			CreateTextFormat();
+			CreateTextLayout();
+		}
+	}
+
+	bool Label::GetBold()
+	{
+		return bold_;
+	}
+
+	void Label::SetItalic(bool italic)
+	{
+		if (italic != italic_)
+		{
+			italic_ = italic;
+			CreateTextFormat();
+			CreateTextLayout();
+		}
+	}
+
+	bool Label::GetItalic()
+	{
+		return italic_;
+	}
+
+	void Label::SetUnderline(bool underline)
+	{
+		if (underline != underline_)
+		{
+			underline_ = underline;
+			text_layout_->SetUnderline(underline_, { 0, text_.size() });
+		}
+	}
+
+	bool Label::GetUnderline()
+	{
+		return underline_;
+	}
+
+	void Label::SetBorder(bool border)
+	{
+		if (border != border_)
+		{
+			border_ = border;
+			if (border_)
+			{
+				CreateBorderBrush();
+				CreateTextRender();
+			}
+			else
+			{
+				border_brush_.Reset();
+				CreateTextRender();
+			}
+		}
+	}
+
+	bool Label::GetBorder()
+	{
+		return border_;
+	}
+
+	void Label::SetBorderColor(const DWColor& color)
+	{
+		border_color_ = color;
+		if (border_)
+		{
+			CreateBorderBrush();
+			CreateTextRender();
+		}
+	}
+
+	const DWColor& Label::GetBorderColor() const
+	{
+		return border_color_;
+	}
+
+	void Label::CreateTextLayout()
+	{
+		text_layout_.Reset();
+		HR(Director::GetInstance().GetRender().dwrite_factory->CreateTextLayout(
+			text_.c_str(),                       // Text to be displayed
+			text_.size(),                     // Length of the text
+			text_format_.Get(),                 // DirectWrite Text Format object
+			1280,                         // Width of the Text Layout
+			800,                        // Height of the Text Layout
+			&text_layout_
+		));
+		if (underline_)
+		{
+			text_layout_->SetUnderline(true, {0, text_.size()});
+		}
+		DWRITE_TEXT_METRICS info;
+		text_layout_->GetMetrics(&info);
+		SetContentSize(info.width, info.height);
+	}
+	void Label::CreateTextFormat()
+	{
+		text_format_.Reset();
+		DWRITE_FONT_STYLE style = italic_ ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+		DWRITE_FONT_WEIGHT weight = bold_ ? DWRITE_FONT_WEIGHT_BOLD : DWRITE_FONT_WEIGHT_NORMAL;
+		HR(Director::GetInstance().GetRender().dwrite_factory->CreateTextFormat(font_family_.c_str(),
+			s_font_collection_.Get(),
+			weight,
+			style,
+			DWRITE_FONT_STRETCH_NORMAL,
+			static_cast<float>(font_size_), L"",
+			text_format_.GetAddressOf()));
+	}
+	void Label::CreateFontBrush()
+	{
+		font_brush_.Reset();
+		HR(Director::GetInstance().GetRender().d2d_render_target->CreateSolidColorBrush(
+			D2D1::ColorF(font_color_.GetByteColor(), alpha_with_parent_ * font_color_.GetFloatA()),
+			font_brush_.GetAddressOf()));
+	}
+	void Label::CreateBorderBrush()
+	{
+		border_brush_.Reset();
+		HR(Director::GetInstance().GetRender().d2d_render_target->CreateSolidColorBrush(
+			D2D1::ColorF(border_color_.GetByteColor(), alpha_with_parent_ * border_color_.GetFloatA()),
+			border_brush_.GetAddressOf()));
+	}
+	void Label::CreateTextRender()
+	{
+		text_render_.reset();
+		text_render_ = std::make_unique<TextRender>(Director::GetInstance().GetRender().d2d_factory,
+			Director::GetInstance().GetRender().d2d_render_target,
+			font_brush_.Get(),
+			border_brush_.Get());
 	}
 	void Label::Draw()
 	{
@@ -113,7 +231,7 @@ namespace DW
 		auto transform = SimpleMath::XMMATRIXConvertToMatrix3x2F(transform_matrix_with_parent_);
 		render.d2d_render_target->SetTransform(transform);
 		render.d2d_render_target->BeginDraw();
-		text_layout_->Draw(nullptr, text_render_.get(),0.f, 0.f);
+		text_layout_->Draw(nullptr, text_render_.get(), 0.f, 0.f);
 		render.d2d_render_target->EndDraw();
 	}
 }

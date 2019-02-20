@@ -16,7 +16,7 @@ namespace DW
 		TextRender(
 			ID2D1Factory* d2d_factory, ID2D1RenderTarget* render_target,
 			ID2D1Brush *text_brush, ID2D1SolidColorBrush *ptext_outline_brush,
-			float stroke_width = 1.0f);
+			float stroke_width = 2.0f);
 
 		~TextRender();
 

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "TTFInfo.h"
 namespace DW
 {
 
@@ -14,10 +14,14 @@ namespace DW
 
 		~FontManager() = default;
 
-		void AddTTFFont(const std::string& font);
+		void AddTTFFont(const std::string& font_file);
+
+		const std::string& GetFontFamilyName(const std::string& font_file) const;
 	private:
-		FontManager() = delete;
+		FontManager() = default;
 		FontManager(const FontManager&) = delete;
 		FontManager& operator =(const FontManager&) = delete;
+	private:
+		std::unordered_map<std::string, TTFInfo> fonts_;
 	};
 }

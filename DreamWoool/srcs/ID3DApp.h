@@ -12,7 +12,7 @@
 namespace DW
 {
 	static const unsigned int C_FLIP_PRESENT = 0x1;
-	static const unsigned int C_ALLOW_TEARING= 0x2;
+	static const unsigned int C_ALLOW_TEARING = 0x2;
 	static const unsigned int C_ENABLE_4XMSAA = 0x4;
 	class ID3DApp
 	{
