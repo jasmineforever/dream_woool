@@ -8,7 +8,6 @@ public:
 
 	static bool CompileD3DShader(const char* filePath, const char* entry, const char*
 		shaderModel, ID3DBlob** buffer);
-
 private:
 	Utils();
 	~Utils() = default;

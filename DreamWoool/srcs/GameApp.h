@@ -1,6 +1,5 @@
 #pragma once
 #include "ID3DApp.h"
-#include "graphics/TextRender.h"
 #include "Scene.h"
 
 namespace DW

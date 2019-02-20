@@ -3,6 +3,9 @@
 #include  <io.h>
 #include  <stdio.h>
 #include <D3DCompiler.h>
+#include <istream>
+#include <codecvt>
+#include <locale>
 
 bool Utils::IsFileExist(const std::string& file_path)
 {

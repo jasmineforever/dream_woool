@@ -93,6 +93,17 @@ namespace DW
 			{
 				OutputDebugString(L"Failed to retrieve system font collection.\n");
 			}
+			Microsoft::WRL::ComPtr<IDWriteFontFamily> fontFamily;
+			wchar_t name_buf[128];
+
+			for (int i = 0; i < s_font_collection_->GetFontFamilyCount(); i++)
+			{
+				fontFamily.Reset();
+				s_font_collection_->GetFontFamily(i, fontFamily.GetAddressOf());
+				Microsoft::WRL::ComPtr <IDWriteLocalizedStrings> name;
+				fontFamily->GetFamilyNames(name.GetAddressOf());
+				name->GetString(0, name_buf, 128);
+			}
 			s_init_state = true;
 		}
 	}
