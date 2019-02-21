@@ -48,9 +48,11 @@ namespace DW
 
 		sprite3_ = Sprite::Create("resources/texture2.jpg");
 		sprite2_->AddChild(sprite3_);
+
+		Schedule(std::bind(&TestNode::UpdateTest, this, std::placeholders::_1), 0.1, INT_MAX, 10.0f);
 		return true;
 	}
-	void TestNode::Update(float dt)
+	void TestNode::UpdateTest(float dt)
 	{
 		static bool left = false;
 		if (GetPosition().x <= FLT_TRUE_MIN)

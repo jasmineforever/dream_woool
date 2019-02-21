@@ -26,7 +26,7 @@ namespace DW
 	}
 	bool GameScene::Init()
 	{
-		auto bg = Sprite::Create("resources/xinshou.jpg");
+		auto bg = Sprite::Create("resources/test_map.bmp");
 		AddChild(bg);
 		auto node = TestNode::Create();
 		node->SetPosition(1280 / 2, 800 / 2);

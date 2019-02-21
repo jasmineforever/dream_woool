@@ -173,13 +173,14 @@ namespace DW
 
 	void Label::CreateTextLayout()
 	{
+		auto screen_size = Director::GetInstance().GetScreenSize();
 		text_layout_.Reset();
 		HR(Director::GetInstance().GetRender().dwrite_factory->CreateTextLayout(
 			text_.c_str(),                       // Text to be displayed
 			text_.size(),                     // Length of the text
 			text_format_.Get(),                 // DirectWrite Text Format object
-			1280,                         // Width of the Text Layout
-			800,                        // Height of the Text Layout
+			screen_size.width,                        // Width of the Text Layout
+			screen_size.height,                       // Height of the Text Layout
 			&text_layout_
 		));
 		if (underline_)

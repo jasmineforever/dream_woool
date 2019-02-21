@@ -11,8 +11,6 @@ namespace DW
 		~TestSpriteNodeFrame();
 
 		static std::shared_ptr<TestSpriteNodeFrame> Create();
-
-		void Update(float dt);
 	private:
 		bool Init();
 	private:

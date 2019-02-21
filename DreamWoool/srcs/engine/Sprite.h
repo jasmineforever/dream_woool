@@ -2,6 +2,8 @@
 #include "Node.h"
 #include "SpriteFrame.h"
 #include "VertexTypes.h"
+#include "SpriteFrameAnimation.h"
+
 namespace DW
 {
 	class Sprite : public Node
@@ -23,6 +25,9 @@ namespace DW
 
 		void SetSpriteFrame(std::shared_ptr<SpriteFrame> sf);
 
+		void RunSpriteFrameAnimation(std::shared_ptr<SpriteFrameAnimation> animation);
+
+		void Update(float dt);
 	private:
 		std::shared_ptr<SpriteFrame>			sprite_frame_;
 
@@ -35,6 +40,8 @@ namespace DW
 		Microsoft::WRL::ComPtr<ID3D11Buffer>	index_buffer_;
 
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> inputlayout_;
+
+		std::shared_ptr<SpriteFrameAnimation>	sprite_animation_;
 	private:
 		void InitVertices();
 

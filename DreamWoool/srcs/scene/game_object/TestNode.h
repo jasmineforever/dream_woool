@@ -10,8 +10,7 @@ namespace DW
 		TestNode();
 		~TestNode();
 		static std::shared_ptr<TestNode> Create();
-
-		void Update(float dt);
+		void UpdateTest(float dt);
 	private:
 		bool Init();
 	private:

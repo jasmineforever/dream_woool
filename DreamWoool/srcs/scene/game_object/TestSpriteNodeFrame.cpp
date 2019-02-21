@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "TestSpriteNodeFrame.h"
 #include "SpriteFrameCache.h"
+#include "SpriteFrameAnimation.h"
 #include "Label.h"
 namespace DW
 {
@@ -47,28 +48,15 @@ namespace DW
 		}
 		sprite_ = Sprite::Create();
 		sprite_->SetAnchorPoint(0, 0);
-		sprite_->SetSpriteFrame(sps_[0]);
 		AddChild(sprite_);
 		
 		auto label = Label::Create("ÏãÏãµÄÎÒ", 20, DWColor::Yellow, "resources/fonts/lantinghei.ttf");
 		label->SetUnderline(true);
 		label->SetBorder(true);
 		AddChild(label);
+
+		auto animation = SpriteFrameAnimation::Create(sps_, 1.5 / 6.0, true);
+		sprite_->RunSpriteFrameAnimation(animation);
 		return true;
-	}
-	void TestSpriteNodeFrame::Update(float dt)
-	{
-		static int index = 0;
-		static int count = 0;
-		if (++count == 10)
-		{
-			count = 0;
-			index += 1;
-			if (index >= sps_.size())
-			{
-				index = 0;
-			}
-			sprite_->SetSpriteFrame(sps_[index]);
-		}
 	}
 }

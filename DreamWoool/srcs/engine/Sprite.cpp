@@ -151,4 +151,25 @@ namespace DW
 		render.d3d_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		render.d3d_context->DrawIndexed(6, 0, 0);
 	}
+
+	void Sprite::RunSpriteFrameAnimation(std::shared_ptr<SpriteFrameAnimation> animation)
+	{
+		if (sprite_animation_)
+		{
+			sprite_animation_.reset();
+		}
+		sprite_animation_ = animation;
+		sprite_animation_->SetSprite(this);
+	}
+
+	void Sprite::Update(float dt)
+	{
+		if (sprite_animation_)
+		{
+			if (!sprite_animation_->Update(dt))
+			{
+				sprite_animation_.reset();
+			}
+		}
+	}
 }

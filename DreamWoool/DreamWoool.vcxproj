@@ -23,7 +23,7 @@
     <ProjectGuid>{A7902F61-AB13-4553-8A41-126C6E60FAED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DreamWoool</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -170,6 +170,7 @@
     <ClInclude Include="srcs\engine\shared_enabler.hpp" />
     <ClInclude Include="srcs\engine\Sprite.h" />
     <ClInclude Include="srcs\engine\SpriteFrame.h" />
+    <ClInclude Include="srcs\engine\SpriteFrameAnimation.h" />
     <ClInclude Include="srcs\engine\SpriteFrameCache.h" />
     <ClInclude Include="srcs\engine\TextRender.h" />
     <ClInclude Include="srcs\engine\Texture.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="srcs\GameApp.h" />
     <ClInclude Include="srcs\ID3DApp.h" />
     <ClInclude Include="srcs\scene\GameScene.h" />
+    <ClInclude Include="srcs\scene\game_object\MirMap.h" />
     <ClInclude Include="srcs\scene\game_object\TestNode.h" />
     <ClInclude Include="srcs\scene\game_object\TestSpriteNodeFrame.h" />
     <ClInclude Include="srcs\StepTimer.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="srcs\engine\Scheduler.cpp" />
     <ClCompile Include="srcs\engine\Sprite.cpp" />
     <ClCompile Include="srcs\engine\SpriteFrame.cpp" />
+    <ClCompile Include="srcs\engine\SpriteFrameAnimation.cpp" />
     <ClCompile Include="srcs\engine\SpriteFrameCache.cpp" />
     <ClCompile Include="srcs\engine\TextRender.cpp" />
     <ClCompile Include="srcs\engine\Texture.cpp" />
@@ -223,6 +226,7 @@
     <ClCompile Include="srcs\GameApp.cpp" />
     <ClCompile Include="srcs\ID3DApp.cpp" />
     <ClCompile Include="srcs\scene\GameScene.cpp" />
+    <ClCompile Include="srcs\scene\game_object\MirMap.cpp" />
     <ClCompile Include="srcs\scene\game_object\TestNode.cpp" />
     <ClCompile Include="srcs\scene\game_object\TestSpriteNodeFrame.cpp" />
     <ClCompile Include="srcs\tools\DDSTextureLoader.cpp" />

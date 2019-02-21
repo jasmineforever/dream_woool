@@ -236,17 +236,17 @@ namespace DW
 			return a->local_z_order_ < b->local_z_order_;
 		});
 	}
-	int Node::Schedule(std::function<void(float)> func,
+	uint32_t Node::Schedule(std::function<void(float)> func,
 		float interval_in_seconds,
 		unsigned int repeat,
 		float delay_in_seconds)
 	{
-		return Director::GetInstance().Schedule(func, interval_in_seconds, repeat, delay_in_seconds);
+		return Director::GetInstance().GetScheduler().Schedule(func, interval_in_seconds, repeat, delay_in_seconds);
 	}
 
-	void Node::UnSchedule(int schedule_id)
+	void Node::UnSchedule(uint32_t schedule_id)
 	{
-		return Director::GetInstance().UnSchedule(schedule_id);
+		return Director::GetInstance().GetScheduler().UnSchedule(schedule_id);
 	}
 	void Node::Update(float t)
 	{

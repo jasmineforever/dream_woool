@@ -89,12 +89,12 @@ namespace DW
 
 		virtual void Update(float t);
 
-		int Schedule(std::function<void (float)> func, 
+		uint32_t Schedule(std::function<void (float)> func, 
 			float interval_in_seconds, 
 			unsigned int repeat = 0, 
 			float delay_in_seconds = 0.0);
 
-		void UnSchedule(int schedule_id);
+		void UnSchedule(uint32_t uint32_t);
 
 	protected:
 		void VisitForDraw(bool is_parent_transform_dirty, bool is_parent_alpha_dirty);

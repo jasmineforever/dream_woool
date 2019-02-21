@@ -8,6 +8,7 @@ namespace DW
 		static Director d;
 		return d;
 	}
+
 	Director::Director()
 	{
 
@@ -25,6 +26,11 @@ namespace DW
 		ID2D1Factory* d2d_factory)
 	{
 		render_.Init(d3d_device, d3d_context, d2d_render_target, dwrite_factory, d2d_factory);
+	}
+
+	Scheduler& Director::GetScheduler()
+	{
+		return scheduler_;
 	}
 
 	Render& Director::GetRender()
@@ -69,28 +75,11 @@ namespace DW
 
 	void Director::Update(float dt)
 	{
+		scheduler_.Update(dt);
+
 		if (now_scene_)
 		{
 			now_scene_->UpdateScene(dt);
 		}
-	}
-
-	void Director::RunFunctionInMainLoop(std::function<void()> func)
-	{
-		std::lock_guard<std::mutex> lock(func_run_mutex_);
-		functions_.push_back(std::move(func));
-	}
-
-	int Director::Schedule(std::function<void(float)> func,
-		float interval_in_seconds,
-		unsigned int repeat,
-		float delay_in_seconds)
-	{
-		return 0;
-	}
-
-	void Director::UnSchedule(int schedule_id)
-	{
-
 	}
 }

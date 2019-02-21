@@ -4,6 +4,7 @@
 #include "SimpleMath.h"
 #include "Scene.h"
 #include "Render.h"
+#include "Scheduler.h"
 namespace DW
 {
 	class Director
@@ -21,7 +22,7 @@ namespace DW
 
 		Render& GetRender();
 
-		void RunFunctionInMainLoop(std::function<void ()> func);
+		Scheduler& GetScheduler();
 
 		void RunScene(std::shared_ptr<Scene> scene);
 
@@ -35,21 +36,14 @@ namespace DW
 
 		void RenderScene();
 
-		int Schedule(std::function<void(float)> func,
-			float interval_in_seconds,
-			unsigned int repeat,
-			float delay_in_seconds);
-
-		void UnSchedule(int schedule_id);
-
 	private:
 		Director();
 		Director(const Director&) = delete;
 		Director& operator = (const Director&) = delete;
 	private:
+		Scheduler							scheduler_;
 		Render								render_;
 		std::mutex							func_run_mutex_;
-		std::vector< std::function<void()>> functions_;
 		std::shared_ptr<Scene>				now_scene_;
 		SimpleMath::Size					screen_size_;
 	};
