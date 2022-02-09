@@ -74,11 +74,21 @@ namespace DW
 			shader.size,
 			inputlayout_.GetAddressOf());
 	}
+
+	void Sprite::SetColor(const DWColor& color)
+	{
+		color_ = color;
+	}
 	void Sprite::InitVertices()
 	{
 		for (int i = 0; i < ARRAYSIZE(vertices_); ++i)
 		{
-			vertices_[i].color = { 1.0, 1.0, 1.0, 1.0 };
+			//vertices_[i].color.x = color_.GetFloatColor().f[0];
+			//vertices_[i].color.y = color_.GetFloatColor().f[1];
+			//vertices_[i].color.z = color_.GetFloatColor().f[2];
+			//vertices_[i].color.w = color_.GetFloatColor().f[3];
+
+			memcpy(&vertices_[i].color, color_.GetFloatColor().f, 4 * sizeof(float));
 		}
 		auto src_rect = sprite_frame_->GetSourceRect();
 		

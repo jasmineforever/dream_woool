@@ -40,3 +40,48 @@ bool Utils::CompileD3DShader(const char* filePath, const char* entry, const char
 		errorBuffer->Release();
 	return true;
 }
+std::string Utils::GetFileNameInPath(const std::string& path)
+{
+	int point_index = -1;
+	int split_index = -1;
+
+	for (int i = path.size() - 1; i >= 0; i--)
+	{
+		if ('.' == path[i] && point_index == -1)
+		{
+			point_index = i;
+		}
+		else if ('/' == path[i] || '\\' == path[i])
+		{
+			split_index = i;
+			break;
+		}
+	}
+	if (split_index > 0 && point_index > split_index)
+	{
+		return path.substr(split_index + 1, point_index - split_index - 1);
+	}
+	return path;
+}
+std::string Utils::GetParentPath(const std::string& path, int level)
+{
+	int count = 0;;
+	int index = -1;
+	for (int i = path.size() - 1; i >= 0; i--)
+	{
+		if ('/' == path[i] || '\\' == path[i])
+		{
+			count++;
+			if (count == level)
+			{
+				index = i; 
+				break;
+			}
+		}
+	}
+	if (index >= 0 && index <= path.size())
+	{
+		return path.substr(0, index);
+	}
+	return path;
+}

@@ -33,7 +33,8 @@ namespace DW
 		anchor_point_(0.,0.),
 		alpha_(1.0),
 		alpha_with_parent_(1.0),
-		alpha_dirty_(true)
+		alpha_dirty_(true),
+		children_size_(0)
 	{
 	}
 	void Node::SetLocalZOrder(int order)
@@ -206,6 +207,7 @@ namespace DW
 		child->parent_ = shared_from_this();
 		child->SetLocalZOrder(local_z_order);
 		children_.push_back(child);
+		children_size_ += 1;
 	}
 
 	void Node::RemoveChild(std::shared_ptr<Node> child)
@@ -217,6 +219,7 @@ namespace DW
 				if ((*cit) == child)
 				{
 					children_.erase(cit);
+					children_size_ -= 1;
 					break;
 				}
 			}
@@ -354,18 +357,21 @@ namespace DW
 	}
 	void Node::VisitForUpdate(float t)
 	{
-		if (children_.size() > 0)
+		if (visible_)
 		{
-			Update(t);
-
-			for (auto& c : children_)
+			if (children_.size() > 0)
 			{
-				c->VisitForUpdate(t);
+				Update(t);
+
+				for (const auto& c : children_)
+				{
+					c->VisitForUpdate(t);
+				}
 			}
-		}
-		else
-		{
-			Update(t);
+			else
+			{
+				Update(t);
+			}
 		}
 	}
 	void Node::VisitForDraw(bool is_parent_transform_dirty, bool is_parent_alpha_dirty)

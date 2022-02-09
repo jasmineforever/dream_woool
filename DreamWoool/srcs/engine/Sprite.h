@@ -3,6 +3,7 @@
 #include "SpriteFrame.h"
 #include "VertexTypes.h"
 #include "SpriteFrameAnimation.h"
+#include "Color.h"
 
 namespace DW
 {
@@ -28,6 +29,9 @@ namespace DW
 		void RunSpriteFrameAnimation(std::shared_ptr<SpriteFrameAnimation> animation);
 
 		void Update(float dt);
+
+		void SetColor(const DWColor& color);
+
 	private:
 		std::shared_ptr<SpriteFrame>			sprite_frame_;
 
@@ -42,6 +46,8 @@ namespace DW
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> inputlayout_;
 
 		std::shared_ptr<SpriteFrameAnimation>	sprite_animation_;
+
+		DWColor									color_;
 	private:
 		void InitVertices();
 

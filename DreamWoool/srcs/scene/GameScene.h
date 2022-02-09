@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Sprite.h"
+#include "Actor.h"
 namespace DW
 {
 	class GameScene : public Scene
@@ -14,6 +15,6 @@ namespace DW
 		GameScene(GameScene&) = delete;
 		GameScene& operator=(const GameScene&) = delete;
 	private:
-		
+		std::shared_ptr<Actor> hero_;
 	};
 }

@@ -7,6 +7,7 @@ namespace DW
 		Node("")
 	{
 		SetNodeType(NodeType::DRAW_NODE);
+		InitGraphics();
 	}
 	DrawNode::~DrawNode()
 	{
@@ -15,9 +16,7 @@ namespace DW
 
 	std::shared_ptr<DrawNode> DrawNode::Create()
 	{
-		auto p = std::make_shared<DrawNode>();
-		p->InitGraphics();
-		return p;
+		return  std::make_shared<DrawNode>();
 	}
 	void DrawNode::InitGraphics()
 	{

@@ -23,32 +23,32 @@
     <ProjectGuid>{A7902F61-AB13-4553-8A41-126C6E60FAED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DreamWoool</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -72,14 +72,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)/srcs;$(ProjectDir)/srcs/tools;$(ProjectDir)/srcs/engine;$(ProjectDir)/srcs/scene;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/srcs;$(ProjectDir)/srcs/tools;$(ProjectDir)/srcs/engine;$(ProjectDir)/srcs/scene;$(ProjectDir)/srcs/scene/game_object;$(ProjectDir)/srcs/scene/common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)/srcs;$(ProjectDir)/srcs/tools;$(ProjectDir)/srcs/engine;$(ProjectDir)/srcs/scene;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)/srcs;$(ProjectDir)/srcs/tools;$(ProjectDir)/srcs/engine;$(ProjectDir)/srcs/scene;$(ProjectDir)/srcs/scene/game_object;$(ProjectDir)/srcs/scene/common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -179,9 +179,16 @@
     <ClInclude Include="srcs\engine\VertexTypes.h" />
     <ClInclude Include="srcs\GameApp.h" />
     <ClInclude Include="srcs\ID3DApp.h" />
+    <ClInclude Include="srcs\scene\common\dwTypedef.h" />
+    <ClInclude Include="srcs\scene\common\GameUtils.h" />
+    <ClInclude Include="srcs\scene\common\ResourcesPool.h" />
+    <ClInclude Include="srcs\scene\common\Singleton.h" />
     <ClInclude Include="srcs\scene\GameScene.h" />
+    <ClInclude Include="srcs\scene\game_object\Actor.h" />
+    <ClInclude Include="srcs\scene\game_object\BloodBar.h" />
     <ClInclude Include="srcs\scene\game_object\MirMap.h" />
     <ClInclude Include="srcs\scene\game_object\MirMapData.h" />
+    <ClInclude Include="srcs\scene\game_object\TestMap.h" />
     <ClInclude Include="srcs\scene\game_object\TestNode.h" />
     <ClInclude Include="srcs\scene\game_object\TestSpriteNodeFrame.h" />
     <ClInclude Include="srcs\StepTimer.h" />
@@ -191,6 +198,7 @@
     <ClInclude Include="srcs\tools\DXTrace.h" />
     <ClInclude Include="srcs\tools\LoaderHelpers.h" />
     <ClInclude Include="srcs\tools\Logger.h" />
+    <ClInclude Include="srcs\tools\MirMapLoader.h" />
     <ClInclude Include="srcs\tools\PlatformHelpers.h" />
     <ClInclude Include="srcs\tools\SimpleMath.h" />
     <ClInclude Include="srcs\tools\StringUtil.h" />
@@ -226,14 +234,20 @@
     <ClCompile Include="srcs\engine\VertexTypes.cpp" />
     <ClCompile Include="srcs\GameApp.cpp" />
     <ClCompile Include="srcs\ID3DApp.cpp" />
+    <ClCompile Include="srcs\scene\common\GameUtils.cpp" />
+    <ClCompile Include="srcs\scene\common\ResourcesPool.cpp" />
     <ClCompile Include="srcs\scene\GameScene.cpp" />
+    <ClCompile Include="srcs\scene\game_object\Actor.cpp" />
+    <ClCompile Include="srcs\scene\game_object\BloodBar.cpp" />
     <ClCompile Include="srcs\scene\game_object\MirMap.cpp" />
     <ClCompile Include="srcs\scene\game_object\MirMapData.cpp" />
+    <ClCompile Include="srcs\scene\game_object\TestMap.cpp" />
     <ClCompile Include="srcs\scene\game_object\TestNode.cpp" />
     <ClCompile Include="srcs\scene\game_object\TestSpriteNodeFrame.cpp" />
     <ClCompile Include="srcs\tools\DDSTextureLoader.cpp" />
     <ClCompile Include="srcs\tools\DXTrace.cpp" />
     <ClCompile Include="srcs\tools\Logger.cpp" />
+    <ClCompile Include="srcs\tools\MirMapLoader.cpp" />
     <ClCompile Include="srcs\tools\StringUtil.cpp" />
     <ClCompile Include="srcs\tools\Utils.cpp" />
     <ClCompile Include="srcs\tools\WICTextureLoader.cpp" />

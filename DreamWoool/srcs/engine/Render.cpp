@@ -37,7 +37,7 @@ namespace DW
 		common_states_ = std::make_unique<CommonStates>(_d3d_device);
 
 		//make the font clear
-		d2d_render_target->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
+		//d2d_render_target->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
 		d2d_render_target->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		InitShaders();
 	}

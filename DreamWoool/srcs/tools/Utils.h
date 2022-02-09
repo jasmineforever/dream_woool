@@ -8,6 +8,10 @@ public:
 
 	static bool CompileD3DShader(const char* filePath, const char* entry, const char*
 		shaderModel, ID3DBlob** buffer);
+
+	static std::string GetParentPath(const std::string& path, int level = 1);
+
+	static std::string GetFileNameInPath(const std::string& path);
 private:
 	Utils();
 	~Utils() = default;

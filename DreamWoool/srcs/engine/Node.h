@@ -145,6 +145,7 @@ namespace DW
 		std::string			name_;
 		XMMATRIX			transform_matrix_;
 		float				alpha_;
+		int					children_size_;
 	};
 }
 

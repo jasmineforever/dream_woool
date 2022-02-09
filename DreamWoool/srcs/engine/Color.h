@@ -5,6 +5,8 @@ namespace DW
 	class DWColor
 	{
 	public:
+		DWColor();
+
 		DWColor(float r, float g, float b, float a = 1.0);
 
 		DWColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0xFF);
@@ -194,5 +196,10 @@ namespace DW
 		static DWColor WhiteSmoke;
 		static DWColor Yellow;
 		static DWColor YellowGreen;
+		//ÖÐ¹úÉ«
+		static DWColor CHuaQing;// 2376b7
+		static DWColor CCuiLv; //0x20a162;
+		static DWColor CDouSha; //481e1c
+		static DWColor CHeDingHong; //d42517
 	};
 }

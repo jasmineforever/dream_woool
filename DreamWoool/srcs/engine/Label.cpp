@@ -22,7 +22,7 @@ namespace DW
 	{
 		if (font_family_.empty())
 		{
-			font_family_ = L"Arial";
+			font_family_ = L"Î¢ÈíÑÅºÚ Light";
 		}
 		CreateFontBrush();
 
@@ -80,7 +80,13 @@ namespace DW
 	void Label::SetFontColor(const DWColor& color)
 	{
 		font_color_ = color;
-		font_brush_->SetColor(D2D1::ColorF(font_color_.GetByteColor(), alpha_with_parent_ * font_color_.GetFloatA()));
+		//alpha_with_parent_ * GetOpacity()
+		font_brush_->SetColor(D2D1::ColorF(font_color_.GetByteColor(), alpha_with_parent_ * GetOpacity()));
+
+		if (border_)
+		{
+			border_brush_->SetColor(D2D1::ColorF(border_color_.GetByteColor(), alpha_with_parent_ * GetOpacity()));
+		}
 		CreateTextRender();
 	}
 
@@ -201,7 +207,8 @@ namespace DW
 			weight,
 			style,
 			DWRITE_FONT_STRETCH_NORMAL,
-			static_cast<float>(font_size_), L"",
+			static_cast<float>(font_size_) +.5, 
+			L"",
 			text_format_.GetAddressOf()));
 	}
 	void Label::CreateFontBrush()
@@ -224,7 +231,7 @@ namespace DW
 		text_render_ = std::make_unique<TextRender>(Director::GetInstance().GetRender().d2d_factory,
 			Director::GetInstance().GetRender().d2d_render_target,
 			font_brush_.Get(),
-			border_brush_.Get());
+			border_brush_.Get(), 1.5);
 	}
 	void Label::Draw()
 	{
