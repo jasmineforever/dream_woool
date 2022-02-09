@@ -17,5 +17,5 @@
 
 也用其做过一些PPT：
 
-![](./images/ppt.png)
+![](./images/PPT.png)
 
